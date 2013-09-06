@@ -105,6 +105,15 @@ object SlickDAO extends DAO {
     }
   }
 
-  def createPost(post: Post): Either[String, Boolean] = Left("Not implemented")
+  def createPost(post: Post): Either[String, Boolean] = {
+    db.withSession {
+      try {
+        Right(PostsT.insert(post) > 0)
+      } catch {
+        case e: PSQLException => { Left(e.getServerErrorMessage.getMessage) }
+      }
+    }
+  }
+
   def createUser(userid: String): Either[String, Boolean] = Left("Not implemented")
 }
