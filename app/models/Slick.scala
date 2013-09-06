@@ -45,6 +45,28 @@ object SlickDAO extends DAO {
     def * = created ~ shortTitle ~ random ~ title ~ userid <> (threadApply _, threadUnapply _)
   }
 
+  def postApply(thread_created: DBDate, thread_sTitle: String, thread_random: Int, posted: DBDate, body: Option[String], userid: String): Post = {
+    Post(posted, body, userid, Some(ThreadIdentifier(thread_created, thread_sTitle, thread_random)))
+  }
+
+  def postUnapply(post: Post): Option[Tuple6[DBDate, String, Int, DBDate, Option[String], String]] = {
+    val Post(posted, body, userid, threadID) = post
+    threadID.map({ threadID =>
+      val ThreadIdentifier(thread_created, thread_sTitle, thread_random) = threadID
+      (thread_created, thread_sTitle, thread_random, posted, body, userid)
+    })
+  }
+
+  object PostsT extends Table[Post]("post") {
+    def thread_created = column[DBDate]("thread_created", O.NotNull)
+    def thread_sTitle = column[String]("thread_stitle", O.NotNull)
+    def thread_random = column[Int]("thread_random", O.NotNull)
+    def posted = column[DBDate]("posted", O.NotNull)
+    def body = column[String]("body")
+    def userid = column[String]("userid", O.NotNull)
+    def * = thread_created ~ thread_sTitle ~ thread_random ~ posted ~ body.? ~ userid <> (postApply _, postUnapply _)
+  }
+
   def queryThreads: Seq[Thread] = Seq()
   def queryThread(utfEpoch: Long, shortTitle: String, random: Int): Option[Tuple2[Thread, List[Post]]] = None
   def createThread(thread: Thread): Either[String, Boolean] = Left("Not implemented")
