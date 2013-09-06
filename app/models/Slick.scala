@@ -75,7 +75,26 @@ object SlickDAO extends DAO {
     }
   }
 
-  def queryThread(utfEpoch: Long, shortTitle: String, random: Int): Option[Tuple2[Thread, List[Post]]] = None
+  def queryThread(utfEpoch: Long, shortTitle: String, random: Int): Option[Tuple2[Thread, List[Post]]] = {
+    db.withSession {
+      val thread = Query(ThreadsT)
+        .filter(_.random === random)
+        .filter(_.shortTitle === shortTitle)
+        .filter(_.created === (new Date(utfEpoch): DBDate))
+        .firstOption
+
+      for(t <- thread) yield {
+        val posts = Query(PostsT)
+          .filter(_.thread_random === t.threadID.random)
+          .filter(_.thread_sTitle === t.threadID.shortTitle)
+          .filter(_.thread_created === (t.threadID.created: DBDate))
+          .to[List]
+
+        (t, posts)
+      }
+    }
+  }
+
   def createThread(thread: Thread): Either[String, Boolean] = Left("Not implemented")
   def createPost(post: Post): Either[String, Boolean] = Left("Not implemented")
   def createUser(userid: String): Either[String, Boolean] = Left("Not implemented")
