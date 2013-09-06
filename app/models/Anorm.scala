@@ -51,7 +51,29 @@ object AnormDAO extends DAO {
     }
   }
 
-  def createThread(thread: Thread): Either[String, Boolean] = Left("Not implemented")
+  def createThread(thread: Thread): Either[String, Boolean] = {
+    DB.withConnection { implicit c =>
+      val query = SQL("""
+        insert into thread
+        (created, shortTitle, random, title, userid)
+        values
+        ({created}, {shortTitle}, {random}, {title}, {userid})
+      """).on(
+        'created -> thread.created,
+        'shortTitle -> thread.threadID.shortTitle,
+        'random -> thread.threadID.random,
+        'title -> thread.title,
+        'userid -> thread.userid
+      )
+
+      try {
+        Right(query.executeUpdate() > 0)
+      } catch {
+        case e:PSQLException => { Left(e.getServerErrorMessage.getMessage) }
+      }
+    }
+  }
+
   def createPost(post: Post): Either[String, Boolean] = Left("Not implemented")
   def createUser(userid: String): Either[String, Boolean] = Left("Not implemented")
 }
