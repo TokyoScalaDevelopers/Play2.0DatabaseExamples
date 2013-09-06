@@ -6,7 +6,12 @@ import play.api.mvc._
 import models._
 
 object Application extends Controller {
-  val myDAO: DAO = StubDAO
+  val selectedDAO: String = scala.util.Properties.envOrElse("myDAO", "stub").toLowerCase
+  val myDAO: DAO = selectedDAO match {
+    case "stub" => StubDAO
+    case "anorm" => AnormDAO
+    case "slick" => SlickDAO
+  }
 
   def index = Action {
     Redirect(routes.Application.threadList)
