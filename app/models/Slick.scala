@@ -67,7 +67,14 @@ object SlickDAO extends DAO {
     def * = thread_created ~ thread_sTitle ~ thread_random ~ posted ~ body.? ~ userid <> (postApply _, postUnapply _)
   }
 
-  def queryThreads: Seq[Thread] = Seq()
+  lazy val db = Database.forDataSource(DB.getDataSource())
+
+  def queryThreads: Seq[Thread] = {
+    db.withSession {
+      Query(ThreadsT).to[List]
+    }
+  }
+
   def queryThread(utfEpoch: Long, shortTitle: String, random: Int): Option[Tuple2[Thread, List[Post]]] = None
   def createThread(thread: Thread): Either[String, Boolean] = Left("Not implemented")
   def createPost(post: Post): Either[String, Boolean] = Left("Not implemented")
