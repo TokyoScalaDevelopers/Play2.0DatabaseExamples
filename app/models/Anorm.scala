@@ -105,5 +105,22 @@ object AnormDAO extends DAO {
     }
   }
 
-  def createUser(userid: String): Either[String, Boolean] = Left("Not implemented")
+  def createUser(userid: String): Either[String, Boolean] = {
+    DB.withConnection { implicit c =>
+      val query = SQL("""
+        insert into users
+        (userid)
+        values
+        ({userid})
+      """).on(
+        'userid -> userid
+      )
+
+      try {
+        Right(query.executeUpdate() > 0)
+      } catch {
+        case e: PSQLException => Left(e.getServerErrorMessage.getMessage)
+      }
+    }
+  }
 }

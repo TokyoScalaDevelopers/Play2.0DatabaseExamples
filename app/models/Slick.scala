@@ -115,5 +115,13 @@ object SlickDAO extends DAO {
     }
   }
 
-  def createUser(userid: String): Either[String, Boolean] = Left("Not implemented")
+  def createUser(userid: String): Either[String, Boolean] = {
+    db.withSession {
+      try {
+        Right(UsersT.insert(userid) > 0)
+      } catch {
+        case e: PSQLException => Left(e.getServerErrorMessage.getMessage)
+      }
+    }
+  }
 }
