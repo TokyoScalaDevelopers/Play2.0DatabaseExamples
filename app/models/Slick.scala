@@ -13,7 +13,38 @@ import slick.session.Database.threadLocalSession
 import scala.slick.driver.PostgresDriver.simple._
 import org.postgresql.util.PSQLException
 
+object SlickCustomTypes {
+  implicit def date2sql(date: Date): DBDate = new DBDate(date.getTime())
+  implicit def sql2date(date: DBDate): Date = new Date(date.getTime())
+}
+
 object SlickDAO extends DAO {
+  import SlickCustomTypes._
+
+  object UsersT extends Table[(String)]("users") {
+    def userid = column[String]("userid", O.PrimaryKey)
+    def * = userid
+  }
+
+  def threadApply(created: DBDate, shortTitle: String, random: Int, title: String, userid: String): Thread = {
+    val identifier = ThreadIdentifier(created, shortTitle, random)
+    Thread(created, title, userid, identifier)
+  }
+
+  def threadUnapply(thread: Thread): Option[Tuple5[DBDate, String, Int, String, String]] = {
+    val Thread(_, title, userid, ThreadIdentifier(created, shortTitle, random)) = thread
+    Some((created, shortTitle, random, title, userid))
+  }
+
+  object ThreadsT extends Table[Thread]("thread") {
+    def created = column[DBDate]("created", O.NotNull)
+    def shortTitle = column[String]("shorttitle", O.NotNull)
+    def random = column[Int]("random", O.NotNull)
+    def title = column[String]("title", O.NotNull)
+    def userid = column[String]("userid", O.NotNull)
+    def * = created ~ shortTitle ~ random ~ title ~ userid <> (threadApply _, threadUnapply _)
+  }
+
   def queryThreads: Seq[Thread] = Seq()
   def queryThread(utfEpoch: Long, shortTitle: String, random: Int): Option[Tuple2[Thread, List[Post]]] = None
   def createThread(thread: Thread): Either[String, Boolean] = Left("Not implemented")
