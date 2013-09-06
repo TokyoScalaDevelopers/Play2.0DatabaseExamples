@@ -1,0 +1,20 @@
+@(thread: Thread, posts: Seq[Post], replyForm: Form[Post])
+
+@main("Thread view") {
+    <a href="@routes.Application.threadList" class="backbutton">Back</a>
+
+    <div class="singlethread">
+        <div class="topic">
+            <div class="creator">@thread.userid</div>
+            <div class="time">@thread.created</div>
+            <div class="title">@thread.title</div>
+        </div>
+        @for(post <- posts) {
+            @postView(post)
+        }
+
+        <div class="reply">
+            @forms.newReplyForm(replyForm)
+        </div>
+    </div>
+}

@@ -1,0 +1,6 @@
+@(message: String, form: Form[Post])
+
+@main("New post") {
+    <h2>New post</h2>
+    @forms.newReplyForm(form)
+}

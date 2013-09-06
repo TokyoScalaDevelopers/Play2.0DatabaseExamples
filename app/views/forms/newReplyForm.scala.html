@@ -1,0 +1,10 @@
+@(form: Form[Post])
+
+    @helper.form(action = routes.Application.newPost) {
+        @helpers.inputHidden(form("created"))
+        @helpers.inputHidden(form("shortTitle"))
+        @helpers.inputHidden(form("random"))
+        @helper.inputText(form("userid"), 'placeholder -> "User ID")
+        @helper.inputText(form("body"), 'placeholder -> "Reply...",  'autocomplete -> "off")
+        <input type="submit" value="Create!" />
+    }

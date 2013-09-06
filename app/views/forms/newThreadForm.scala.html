@@ -1,0 +1,6 @@
+@(form: Form[Thread])
+    @helper.form(action = routes.Application.newThread) {
+        @helper.inputText(form("userid"), 'placeholder -> "User ID")
+        @helper.inputText(form("title"), 'placeholder -> "Title",  'autocomplete -> "off")
+        <input type="submit" value="Create!" />
+    }

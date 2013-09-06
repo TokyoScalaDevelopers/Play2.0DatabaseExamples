@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url(/assets/images/backgroundtile.png);
+}
+
+.threadlist {
+    margin-left: 1em;
+    float: left;
+}
+
+.singlethread .topic,
+.threadlist .thread {
+    border: 1px solid gray;
+    border-radius: 1em;
+    background-color: #F8F8FF;
+    padding: 1em;
+
+    overflow: auto;
+}
+
+.singlethread .topic .creator,
+.threadlist .thread .creator {
+    float: left;
+    margin-top: -1em;
+}
+
+.singlethread .topic .time,
+.threadlist .thread .time {
+    float: right;
+    margin-top: -1em;
+    font-size: 75%;
+}
+
+.singlethread .topic .title,
+.threadlist .thread .title {
+    float: left;
+    clear: both;
+}
+
+.singlethread {
+    margin-left: 1em;
+    float: left;
+}
+
+.singlethread .post {
+    border: 1px solid gray;
+    border-radius: 1em;
+    background-color: #F8F8FF;
+    padding: 1em;
+
+    overflow: auto;
+
+    margin: 0.75em 0;
+}
+
+.singlethread .post .poster {
+    float: left;
+    margin-top: -1em;
+}
+
+.singlethread .post .date {
+    float: right;
+    margin-top: -1em;
+    font-size: 75%;
+}
+
+.singlethread .post .body {
+    margin-top: 0.5em;
+    float: left;
+    clear: both;
+}
+
+.backbutton {
+    border: 1px solid gray;
+    border-radius: 1em;
+    padding: 1em;
+    background-color: #E8E8EF;
+    float: left;
+}

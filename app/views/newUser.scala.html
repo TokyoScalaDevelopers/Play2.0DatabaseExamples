@@ -1,0 +1,7 @@
+@(message: String, form: Form[String])
+
+@main("New user") {
+    <h2>@message</h2>
+
+    @forms.newUserForm(form)
+}

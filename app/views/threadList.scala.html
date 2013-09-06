@@ -1,0 +1,19 @@
+@(threads: Seq[Thread], newThreadForm: Form[Thread])
+
+@main("Thread list") {
+    <h1>Threads</h1>
+    <div class="threadlist">
+    @for(thread <- threads) {
+        <div class="thread">
+            <div class="creator">@thread.userid</div>
+            <div class="time">@thread.created</div>
+            <a href="@helpers.thread2URL(thread)" class="title">@thread.title</a>
+        </div>
+    }
+
+    @forms.newThreadForm(newThreadForm)
+
+    <a href="@routes.Application.newUser">Register New User</a>
+
+    </div>
+}

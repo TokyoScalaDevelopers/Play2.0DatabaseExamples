@@ -1,0 +1,5 @@
+@(form: Form[String])
+    @helper.form(action = routes.Application.newUserAction) {
+        @helper.inputText(form("userid"), 'placeholder -> "User ID")
+        <input type="submit" value="Create!" />
+    }
