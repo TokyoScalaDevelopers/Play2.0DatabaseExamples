@@ -3,7 +3,13 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                                 controllers.Application.index
+GET     /t/                               controllers.Application.threadList
+GET     /t/:utfEpoch/:shortTitle/:random  controllers.Application.threadView(utfEpoch: Long, shortTitle: String, random: Int)
+POST    /t/new                            controllers.Application.newThread
+POST    /p/new                            controllers.Application.newPost
+GET     /u/new                            controllers.Application.newUser
+POST    /u/new                            controllers.Application.newUserAction
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
